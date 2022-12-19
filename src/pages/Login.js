@@ -25,10 +25,11 @@ import  { Circles } from 'react-loader-spinner';
 // auth and redux
 import {connect} from 'react-redux';
 import { loginUser } from "../auth/actions/userActions";
-import {useNavigate} from "react-router-dom"
+import {useNavigate,useParams} from "react-router-dom"
 
 const Login = ({loginUser}) => {
   const history=useNavigate();
+  const {userEmail}=useParams()
   return (
     <div>
       <StyledFormArea>
@@ -36,7 +37,7 @@ const Login = ({loginUser}) => {
         <StyledTitle size={30}>Member Login</StyledTitle>
         <Formik 
             initialValues={{
-                email:"",
+                email:userEmail,
                 password:"",
             }}
             validationSchema={

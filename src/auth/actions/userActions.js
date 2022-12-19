@@ -1,6 +1,11 @@
 import axios from "axios";
 import { sessionService } from "redux-react-session";
 
+//the remote endpoint and local
+// const remoteUrl="http://localhost:3000/"
+// const localUrl="http://localhost:3000/"
+// const curentUrl=localUrl
+
 export const loginUser = (
   credentials,
   history,
@@ -26,6 +31,9 @@ export const loginUser = (
             setFieldError("password", message);
           } else if (message.includes("password")) {
             setFieldError("password", message);
+          }
+          else if (message.toLowerCase().includes("email")) {
+            setFieldError("email", message);
           }
         } else if (data.status === "Success") {
           const userData = data.data[0];
@@ -78,28 +86,21 @@ export const signupUser = (
           } else if (message.includes("password")) {
             setFieldError("password", message);
           }
-          setSubmitting(false);
-        } else if (data.status === "Success") {
-          //login user after successful signup
-          const { email, password } = credentials;
-          dispatch(
-            loginUser(
-              { email, password },
-              history,
-              setFieldError,
-              setSubmitting
-            )
-          );
+        } else if (data.status === "Pending") {
+          //display message for email verification
+          const { email } = credentials;
+          history(`/emailsent/${email}`);
         }
+        //complete submission
+        setSubmitting(false);
       })
       .catch((err) => console.error(err));
   };
 };
 export const logoutUser = (history) => {
-    return ()=>{
-        sessionService.deleteSession();
-        sessionService.deleteUser();
-        history('/');
-
-    }
+  return () => {
+    sessionService.deleteSession();
+    sessionService.deleteUser();
+    history("/");
+  };
 };

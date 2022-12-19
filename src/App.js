@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard";
+import EmailSent from "./pages/EmailSent";
 import { BrowserRouter as Router, Routes,Route } from "react-router-dom";
 
 //auth and redux
@@ -17,7 +18,8 @@ function App({checked}) {
       <StyledContainer>
         <Routes>
           <Route  path="/signup" element={<Signup/>}/>
-          <Route exact path="/login" element={<Login/>}/>
+          <Route  path="/emailsent/:userEmail" element={<EmailSent/>}/>
+          <Route exact path="/login/:userEmail?" element={<Login/>}/>
           <Route exact path="/dashboard" element={<Dashboard/>}/>
           <Route exact path="/" element={<Home/>}/>
         </Routes>
