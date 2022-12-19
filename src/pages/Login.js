@@ -20,7 +20,7 @@ import {FiMail,FiLock} from 'react-icons/fi'
 import * as Yup from 'yup'
 
 // Loader
-import  {Loader, Circles } from 'react-loader-spinner';
+import  { Circles } from 'react-loader-spinner';
 
 const Login = () => {
   return (
