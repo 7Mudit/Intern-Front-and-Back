@@ -22,7 +22,13 @@ import * as Yup from 'yup'
 // Loader
 import  { Circles } from 'react-loader-spinner';
 
-const Login = () => {
+// auth and redux
+import {connect} from 'react-redux';
+import { loginUser } from "../auth/actions/userActions";
+import {useNavigate} from "react-router-dom"
+
+const Login = ({loginUser}) => {
+  const history=useNavigate();
   return (
     <div>
       <StyledFormArea>
@@ -39,8 +45,8 @@ const Login = () => {
                     password:Yup.string().min(8,"Password is too short").max(30,"Password is too long").required("Required"),
                 })
             }
-            onSubmit={(values,{setSubmitting})=>{
-                console.log(values);
+            onSubmit={(values,{setSubmitting,setFieldError})=>{
+                loginUser(values,history,setFieldError,setSubmitting);
             }}
         >
           {({isSubmitting}) => (
@@ -85,4 +91,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default connect(null,{loginUser})(Login);

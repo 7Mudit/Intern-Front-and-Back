@@ -9,7 +9,6 @@ import {
 
 import React from "react";
 import { FiEyeOff, FiEye } from "react-icons/fi";
-import { matchPath } from "react-router-dom";
 
 export const TextInput = ({ icon, ...props }) => {
   const [field, meta] = useField(props);

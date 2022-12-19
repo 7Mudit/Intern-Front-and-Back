@@ -1,18 +1,24 @@
 import React from "react";
 import {
   StyledTitle,
-  StyledSubTitle,
   Avatar,
   StyledButton,
   ButtonGroup,
   StyledFormArea,
-  colors
+  colors,
+  ExtraText
 } from "../components/Styles";
 
 //Logo
 import Logo from "./../assets/favicon.png";
+//auth and redux
+import {connect} from 'react-redux'
+import { logoutUser } from "../auth/actions/userActions";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard = () => {
+
+const Dashboard = ({logoutUser,user}) => {
+  const history=useNavigate();
   return (
     <div>
       <div
@@ -30,13 +36,19 @@ const Dashboard = () => {
         <Avatar image={Logo}></Avatar>
       </div>
       <StyledFormArea bg={colors.dark2}>
-        <StyledTitle size={65}>Welcome, User</StyledTitle>
+        <StyledTitle size={65}>Welcome, {user.name}</StyledTitle>
+        <ExtraText color={colors.light1}>{user.email}</ExtraText>
+        <ExtraText color={colors.light1}>{user.phoneNumber}</ExtraText>
         <ButtonGroup>
-          <StyledButton to="#">Logout</StyledButton>
+          <StyledButton to="/" onClick={()=>logoutUser(history)}>Logout</StyledButton>
         </ButtonGroup>
       </StyledFormArea>
     </div>
   );
 };
 
-export default Dashboard;
+const mapStateToProps=({session})=>({
+  user:session.user
+})
+
+export default connect(mapStateToProps,{logoutUser})(Dashboard);

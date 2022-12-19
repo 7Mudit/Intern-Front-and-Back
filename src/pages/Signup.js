@@ -1,12 +1,9 @@
 import React from "react";
 import {
   StyledFormArea,
-  StyledLabel,
-  StyledTextInput,
   StyledFormButton,
   Avatar,
   StyledTitle,
-  colors,
   ButtonGroup,
   ExtraText,
   TextLink,
@@ -20,9 +17,14 @@ import {FiMail,FiLock,FiUser,FiCalendar,FiPhone,FiHome} from 'react-icons/fi'
 import * as Yup from 'yup'
 
 // Loader
-import  {Loader, Circles } from 'react-loader-spinner';
+import  { Circles } from 'react-loader-spinner';
+//auth and redux
+import {connect} from 'react-redux';
+import { signupUser } from "../auth/actions/userActions";
+import {useNavigate} from "react-router-dom"
 
-const Signup = () => {
+const Signup = ({signupUser}) => {
+  const history=useNavigate()
   return (
     <div>
       <StyledFormArea>
@@ -32,7 +34,7 @@ const Signup = () => {
             initialValues={{
                 email:"",
                 password:"",
-                repeatPassword:"",
+                // repeatPassword:"",
                 dateOfBirth:"",
                 name:"",
                 phoneNumber:"",
@@ -44,13 +46,12 @@ const Signup = () => {
                     password:Yup.string().min(8,"Password is too short").max(30,"Password is too long").required("Required"),
                     name:Yup.string().required("Required"),
                     dateOfBirth:Yup.date().required("Required"),
-                    repeatPassword:Yup.string().required("Required").oneOf([Yup.ref("password")],"Passwords must match"),
-                    phoneNumber:Yup.number().max(10,"Must be 10 digits").required("Required"),
+                    // repeatPassword:Yup.string().required("Required").oneOf([Yup.ref("password")],"Passwords must match"),
                     address:Yup.string().min(8,"Address is too short").max(30,"Address is too long").required("Required"),
                 })
             }
-            onSubmit={(values,{setSubmitting})=>{
-                console.log(values);
+            onSubmit={(values,{setSubmitting,setFieldError})=>{
+                signupUser(values,history,setFieldError,setSubmitting)
             }}
         >
           {({isSubmitting}) => (
@@ -97,13 +98,13 @@ const Signup = () => {
                 placeholder="******"
                 icon={<FiLock/>}
               />
-              <TextInput
-                name="password"
+              {/* <TextInput
+                name="repeatpassword"
                 type="password"
                 label="Confirm Password"
                 placeholder="******"
                 icon={<FiLock/>}
-              />
+              /> */}
               <ButtonGroup>
                 {!isSubmitting &&<StyledFormButton type="submit">Signup</StyledFormButton>}
                 {isSubmitting && (
@@ -130,4 +131,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default connect(null,{signupUser})(Signup);
