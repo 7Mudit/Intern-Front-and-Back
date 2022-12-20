@@ -6,7 +6,8 @@ import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard";
 import EmailSent from "./pages/EmailSent";
 import { BrowserRouter as Router, Routes,Route } from "react-router-dom";
-
+import ForgottenPass from "./pages/ForgottenPass";
+import PasswordReset from "./pages/PasswordReset"
 //auth and redux
 // import AuthRoute from "./components/AuthRoute";
 // import BasicRoute from "./components/BasicRoute";
@@ -18,10 +19,12 @@ function App({checked}) {
       <StyledContainer>
         <Routes>
           <Route  path="/signup" element={<Signup/>}/>
-          <Route  path="/emailsent/:userEmail" element={<EmailSent/>}/>
+          <Route  exact path="/passwordreset/:userId/:resetString" element={<PasswordReset/>}/>
+          <Route  path="/emailsent/:userEmail?/:reset?" element={<EmailSent/>}/>
           <Route exact path="/login/:userEmail?" element={<Login/>}/>
           <Route exact path="/dashboard" element={<Dashboard/>}/>
           <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/forgottenpassword" element={<ForgottenPass/>}/>
         </Routes>
       </StyledContainer>
 }

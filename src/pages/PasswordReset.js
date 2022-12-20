@@ -5,15 +5,13 @@ import {
   Avatar,
   StyledTitle,
   ButtonGroup,
-  ExtraText,
-  TextLink,
   Copyright
 } from "./../components/Styles";
 
 import Logo from "./../assets/favicon.png";
 import { Formik, Form } from "formik";
 import { TextInput } from "../components/FormLib";
-import {FiMail,FiLock} from 'react-icons/fi'
+import {FiLock} from 'react-icons/fi'
 import * as Yup from 'yup'
 
 // Loader
@@ -21,50 +19,51 @@ import  { Circles } from 'react-loader-spinner';
 
 // auth and redux
 import {connect} from 'react-redux';
-import { loginUser } from "../auth/actions/userActions";
+import { resetPassword } from "../auth/actions/userActions";
 import {useNavigate,useParams} from "react-router-dom"
 
-const Login = ({loginUser}) => {
+const PasswordReset = ({resetPassword}) => {
   const history=useNavigate();
-  const {userEmail}=useParams()
+  const {userId, resetString}=useParams()
   return (
     <div>
       <StyledFormArea>
         <Avatar image={Logo} />
-        <StyledTitle size={30}>Member Login</StyledTitle>
+        <StyledTitle size={30}>Password Reset</StyledTitle>
         <Formik 
             initialValues={{
-                email:userEmail,
-                password:"",
+                newPassword:"",
+                confirmNewPassword:"",
+                userId,resetString,
             }}
             validationSchema={
                 Yup.object({
-                    email:Yup.string().email("Invalid email address").required("Required"),
-                    password:Yup.string().min(8,"Password is too short").max(30,"Password is too long").required("Required"),
+                    newPassword:Yup.string().min(8,"Password is too short").max(30,"Password is too long").required("Required"),
+                    confirmNewPassword:Yup.string().required("Required").oneOf([Yup.ref("newPassword")],"Passwords must match")
                 })
             }
             onSubmit={(values,{setSubmitting,setFieldError})=>{
-                loginUser(values,history,setFieldError,setSubmitting);
+                resetPassword(values,history,setFieldError,setSubmitting);
             }}
         >
           {({isSubmitting}) => (
             <Form>
               <TextInput
-                name="email"
-                type="text"
-                label="Email Address"
-                placeholder="olga1@example.com"
-                icon={<FiMail/>}
+                name="newPassword"
+                type="password"
+                label="New Password"
+                placeholder="******"
+                icon={<FiLock/>}
               />
               <TextInput
-                name="password"
+                name="confirmNewPassword"
                 type="password"
-                label="Password"
+                label="Confirm New Password"
                 placeholder="******"
                 icon={<FiLock/>}
               />
               <ButtonGroup>
-                {!isSubmitting &&<StyledFormButton type="submit">Login</StyledFormButton>}
+                {!isSubmitting &&<StyledFormButton type="submit">Submit</StyledFormButton>}
                 {isSubmitting && (
                    <Circles
                    height="80"
@@ -80,16 +79,10 @@ const Login = ({loginUser}) => {
             </Form>
           )}
         </Formik>
-        <ExtraText>
-          Forgotten Password? <TextLink to='/forgottenpassword '>Reset it</TextLink>
-        </ExtraText>
-        <ExtraText>
-          New here? <TextLink to='/signup '>Signup</TextLink>
-        </ExtraText>
       </StyledFormArea>
       <Copyright>All Rights Reserved &copy;2020</Copyright>
     </div>
   );
 };
 
-export default connect(null,{loginUser})(Login);
+export default connect(null,{resetPassword})(PasswordReset);

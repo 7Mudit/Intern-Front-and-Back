@@ -31,8 +31,7 @@ export const loginUser = (
             setFieldError("password", message);
           } else if (message.includes("password")) {
             setFieldError("password", message);
-          }
-          else if (message.toLowerCase().includes("email")) {
+          } else if (message.toLowerCase().includes("email")) {
             setFieldError("email", message);
           }
         } else if (data.status === "Success") {
@@ -102,5 +101,79 @@ export const logoutUser = (history) => {
     sessionService.deleteSession();
     sessionService.deleteUser();
     history("/");
+  };
+};
+
+export const forgottenPassword = (
+  credentials,
+  history,
+  setFieldError,
+  setSubmitting
+) => {
+  //make checks and get some data
+
+  return () => {
+    axios
+      .post("http://localhost:3000/user/requestPasswordReset", credentials, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        const { data } = response;
+        if (data.status === "Failed") {
+          const { message } = data;
+          //check for specific error
+          if (
+            message.toLowerCase().includes("user") ||
+            message.toLowerCase().includes("password") ||
+            message.toLowerCase().includes("email")
+          ) {
+            setFieldError("email", message);
+          }
+        } else if (data.status === "Pending") {
+          const { email } = credentials;
+          history(`/emailsent/${email}/${true}`);
+        }
+
+        // complete submission
+        setSubmitting(false);
+      })
+      .catch((err) => console.error(err));
+  };
+};
+
+// actual reset
+export const resetPassword = (
+  credentials,
+  history,
+  setFieldError,
+  setSubmitting
+) => {
+  //make checks and get some data
+
+  return () => {
+    axios
+      .post("http://localhost:3000/user/resetPassword", credentials, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        const { data } = response;
+        if (data.status === "Failed") {
+          const { message } = data;
+          //check for specific error
+          if (message.toLowerCase().includes("password")) {
+            setFieldError("newPassword", message);
+          }
+        } else if (data.status === "Success") {
+          history(`/emailsent`);
+        }
+
+        // complete submission
+        setSubmitting(false);
+      })
+      .catch((err) => console.error(err));
   };
 };
